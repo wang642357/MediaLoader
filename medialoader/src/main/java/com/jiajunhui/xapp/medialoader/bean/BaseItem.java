@@ -86,4 +86,6 @@ public class BaseItem implements Serializable {
     public void setModified(long modified) {
         this.modified = modified;
     }
+
+
 }

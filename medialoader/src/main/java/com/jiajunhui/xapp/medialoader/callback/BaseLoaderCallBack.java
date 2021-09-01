@@ -2,11 +2,19 @@ package com.jiajunhui.xapp.medialoader.callback;
 
 import android.provider.MediaStore;
 
+import com.jiajunhui.xapp.medialoader.MediaConfig;
+
 /**
  * Created by Taurus on 2017/5/23.
  */
 
 public abstract class BaseLoaderCallBack<T> extends OnLoaderCallBack {
+
+    protected MediaConfig mMediaConfig;
+
+    public void setMediaConfig(MediaConfig mediaConfig) {
+        mMediaConfig = mediaConfig;
+    }
 
     public abstract void onResult(T result);
 
@@ -25,4 +33,13 @@ public abstract class BaseLoaderCallBack<T> extends OnLoaderCallBack {
         return MediaStore.MediaColumns.DATE_MODIFIED + " DESC";
     }
 
+    @Override
+    public int getLimit() {
+        return -1;
+    }
+
+    @Override
+    public int getOffset() {
+        return -1;
+    }
 }

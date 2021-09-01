@@ -1,16 +1,17 @@
 package com.jiajunhui.xapp.medialoaderdemo;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.jiajunhui.xapp.medialoader.MediaLoader;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
+import com.jiajunhui.xapp.medialoader.MediaStoreLoader;
 import com.jiajunhui.xapp.medialoader.bean.AudioResult;
 import com.jiajunhui.xapp.medialoader.bean.FileResult;
 import com.jiajunhui.xapp.medialoader.bean.FileType;
@@ -64,21 +65,21 @@ public class TestFragment extends Fragment {
         loadAudios();
         loadVideos();
         final StringBuilder mInfos = new StringBuilder();
-        MediaLoader.getLoader().loadFiles(getActivity(), new OnFileLoaderCallBack(FileType.DOC) {
+        MediaStoreLoader.getLoader().loadFiles(getActivity(), new OnFileLoaderCallBack(FileType.DOC) {
             @Override
             public void onResult(FileResult result) {
                 mInfos.append("doc file : " + result.getItems().size()).append("\n");
             }
         });
 
-        MediaLoader.getLoader().loadFiles(getActivity(), new OnFileLoaderCallBack(FileType.ZIP) {
+        MediaStoreLoader.getLoader().loadFiles(getActivity(), new OnFileLoaderCallBack(FileType.ZIP) {
             @Override
             public void onResult(FileResult result) {
                 mInfos.append("zip file : " + result.getItems().size()).append("\n");
             }
         });
 
-        MediaLoader.getLoader().loadFiles(getActivity(), new OnFileLoaderCallBack(FileType.APK) {
+        MediaStoreLoader.getLoader().loadFiles(getActivity(), new OnFileLoaderCallBack(FileType.APK) {
             @Override
             public void onResult(FileResult result) {
                 mInfos.append("apk file : " + result.getItems().size()).append("\n");
@@ -89,30 +90,30 @@ public class TestFragment extends Fragment {
     }
 
     private void loadPhotos() {
-        MediaLoader.getLoader().loadPhotos(getActivity(), new OnPhotoLoaderCallBack() {
+        MediaStoreLoader.getLoader().loadPhotos(getActivity(), new OnPhotoLoaderCallBack() {
             @Override
             public void onResult(PhotoResult result) {
-                Log.d(TAG,"onResult photo ...");
+                Log.d(TAG, "onResult photo ...");
                 tv_photo_info.setText("图片: " + result.getItems().size() + " 张");
             }
         });
     }
 
     private void loadAudios() {
-        MediaLoader.getLoader().loadAudios(getActivity(), new OnAudioLoaderCallBack() {
+        MediaStoreLoader.getLoader().loadAudios(getActivity(), new OnAudioLoaderCallBack() {
             @Override
             public void onResult(AudioResult result) {
-                Log.d(TAG,"onResult audio ...");
+                Log.d(TAG, "onResult audio ...");
                 tv_audio_info.setText("音乐: " + result.getItems().size() + " 个");
             }
         });
     }
 
     private void loadVideos() {
-        MediaLoader.getLoader().loadVideos(getActivity(), new OnVideoLoaderCallBack() {
+        MediaStoreLoader.getLoader().loadVideos(getActivity(), new OnVideoLoaderCallBack() {
             @Override
             public void onResult(VideoResult result) {
-                Log.d(TAG,"onResult video ...");
+                Log.d(TAG, "onResult video ...");
                 tv_video_info.setText("视频: " + result.getItems().size() + " 个");
             }
         });

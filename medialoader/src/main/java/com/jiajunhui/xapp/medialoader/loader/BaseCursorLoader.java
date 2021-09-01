@@ -17,8 +17,8 @@
 package com.jiajunhui.xapp.medialoader.loader;
 
 import android.content.Context;
-import android.support.v4.content.CursorLoader;
 
+import com.jiajunhui.xapp.medialoader.CursorLoader;
 import com.jiajunhui.xapp.medialoader.inter.ILoader;
 
 /**
@@ -33,5 +33,7 @@ public class BaseCursorLoader extends CursorLoader {
         setSelection(iLoader.getSelections());
         setSelectionArgs(iLoader.getSelectionsArgs());
         setSortOrder(iLoader.getSortOrderSql());
+        setLimit(iLoader.getLimit());
+        setOffset(iLoader.getOffset());
     }
 }

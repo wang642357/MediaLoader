@@ -3,24 +3,32 @@ package com.jiajunhui.xapp.medialoaderdemo;
 import android.Manifest;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.jiajunhui.xapp.medialoader.MediaLoader;
+import com.jiajunhui.xapp.medialoader.MediaStoreLoader;
+import com.jiajunhui.xapp.medialoader.MediaType;
 import com.jiajunhui.xapp.medialoader.bean.AudioResult;
 import com.jiajunhui.xapp.medialoader.bean.FileResult;
 import com.jiajunhui.xapp.medialoader.bean.FileType;
+import com.jiajunhui.xapp.medialoader.bean.MediaFolder;
+import com.jiajunhui.xapp.medialoader.bean.MediaItem;
+import com.jiajunhui.xapp.medialoader.bean.MediaResult;
 import com.jiajunhui.xapp.medialoader.bean.PhotoResult;
 import com.jiajunhui.xapp.medialoader.bean.VideoResult;
 import com.jiajunhui.xapp.medialoader.callback.OnAudioLoaderCallBack;
 import com.jiajunhui.xapp.medialoader.callback.OnFileLoaderCallBack;
-import com.jiajunhui.xapp.medialoader.callback.OnVideoLoaderCallBack;
+import com.jiajunhui.xapp.medialoader.callback.OnMediaFileLoaderCallBack;
 import com.jiajunhui.xapp.medialoader.callback.OnPhotoLoaderCallBack;
+import com.jiajunhui.xapp.medialoader.callback.OnVideoLoaderCallBack;
 import com.jiajunhui.xapp.medialoader.filter.PhotoFilter;
 import com.jiajunhui.xapp.medialoader.inter.OnRecursionListener;
 import com.jiajunhui.xapp.medialoader.utils.TraversalSearchLoader;
@@ -114,21 +122,21 @@ public class MainActivity extends AppCompatActivity {
         loadAudios();
         loadVideos();
         final StringBuilder mInfos = new StringBuilder();
-        MediaLoader.getLoader().loadFiles(MainActivity.this, new OnFileLoaderCallBack(FileType.DOC) {
+        MediaStoreLoader.getLoader().loadFiles(MainActivity.this, new OnFileLoaderCallBack(FileType.DOC) {
             @Override
             public void onResult(FileResult result) {
                 mInfos.append("doc file : " + result.getItems().size()).append("\n");
             }
         });
 
-        MediaLoader.getLoader().loadFiles(MainActivity.this, new OnFileLoaderCallBack(FileType.ZIP) {
+        MediaStoreLoader.getLoader().loadFiles(MainActivity.this, new OnFileLoaderCallBack(FileType.ZIP) {
             @Override
             public void onResult(FileResult result) {
                 mInfos.append("zip file : " + result.getItems().size()).append("\n");
             }
         });
 
-        MediaLoader.getLoader().loadFiles(MainActivity.this, new OnFileLoaderCallBack(FileType.APK) {
+        MediaStoreLoader.getLoader().loadFiles(MainActivity.this, new OnFileLoaderCallBack(FileType.APK) {
             @Override
             public void onResult(FileResult result) {
                 mInfos.append("apk file : " + result.getItems().size()).append("\n");
@@ -136,6 +144,21 @@ public class MainActivity extends AppCompatActivity {
                 tv_file_info.setText(mInfos.toString());
             }
         });
+        MediaLoader.with(this).setOnMediaFileLoaderCallBack(new OnMediaFileLoaderCallBack() {
+            @Override
+            public void onResult(MediaResult result) {
+                for (MediaFolder folder : result.getFolders()) {
+                    Log.e("----", folder + "");
+                }
+                for (MediaItem folder : result.getItems()) {
+                    Log.e("----", folder + "");
+                }
+                mInfos.append("media file : " + result.getItems().size()).append("\n");
+                mInfos.append("consume time : " + (System.currentTimeMillis() - start)).append("ms");
+                tv_file_info.setText(mInfos.toString());
+            }
+        }).setPageIndex(0).setPageSize(30).setVideoMaxSecond(10000)
+                .setMediaType(MediaType.ALL).load();
     }
 
     @PermissionFail(requestCode = 100)
@@ -144,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadPhotos() {
-        MediaLoader.getLoader().loadPhotos(this, new OnPhotoLoaderCallBack() {
+        MediaStoreLoader.getLoader().loadPhotos(this, new OnPhotoLoaderCallBack() {
             @Override
             public void onResult(PhotoResult result) {
                 tv_photo_info.setText("图片: " + result.getItems().size() + " 张");
@@ -153,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadAudios() {
-        MediaLoader.getLoader().loadAudios(this, new OnAudioLoaderCallBack() {
+        MediaStoreLoader.getLoader().loadAudios(this, new OnAudioLoaderCallBack() {
             @Override
             public void onResult(AudioResult result) {
                 tv_audio_info.setText("音乐: " + result.getItems().size() + " 个");
@@ -162,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadVideos() {
-        MediaLoader.getLoader().loadVideos(this, new OnVideoLoaderCallBack() {
+        MediaStoreLoader.getLoader().loadVideos(this, new OnVideoLoaderCallBack() {
             @Override
             public void onResult(VideoResult result) {
                 tv_video_info.setText("视频: " + result.getItems().size() + " 个");

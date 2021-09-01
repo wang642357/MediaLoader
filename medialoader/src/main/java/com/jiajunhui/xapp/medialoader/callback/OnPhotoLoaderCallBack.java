@@ -3,7 +3,8 @@ package com.jiajunhui.xapp.medialoader.callback;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v4.content.Loader;
+
+import androidx.loader.content.Loader;
 
 import com.jiajunhui.xapp.medialoader.bean.PhotoFolder;
 import com.jiajunhui.xapp.medialoader.bean.PhotoItem;
@@ -79,5 +80,10 @@ public abstract class OnPhotoLoaderCallBack extends BaseLoaderCallBack<PhotoResu
     @Override
     public Uri getQueryUri() {
         return MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+    }
+
+    @Override
+    public String getSortOrderSql() {
+        return super.getSortOrderSql();
     }
 }

@@ -3,7 +3,8 @@ package com.jiajunhui.xapp.medialoader.callback;
 import android.database.Cursor;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
-import android.support.v4.content.Loader;
+
+import androidx.loader.content.Loader;
 
 import com.jiajunhui.xapp.medialoader.bean.FileItem;
 import com.jiajunhui.xapp.medialoader.bean.FileProperty;
@@ -13,8 +14,8 @@ import com.jiajunhui.xapp.medialoader.bean.FileType;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.provider.MediaStore.Files.FileColumns.MIME_TYPE;
 import static android.provider.MediaStore.Files.FileColumns.DATE_MODIFIED;
+import static android.provider.MediaStore.Files.FileColumns.MIME_TYPE;
 
 /**
  * Created by Taurus on 2017/5/23.
