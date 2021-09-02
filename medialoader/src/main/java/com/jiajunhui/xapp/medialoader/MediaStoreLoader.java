@@ -1,13 +1,15 @@
 package com.jiajunhui.xapp.medialoader;
 
+import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
@@ -19,16 +21,12 @@ import com.jiajunhui.xapp.medialoader.callback.OnPhotoLoaderCallBack;
 import com.jiajunhui.xapp.medialoader.callback.OnVideoLoaderCallBack;
 import com.jiajunhui.xapp.medialoader.loader.AbsLoaderCallBack;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 
 /**
  * Created by Taurus on 2017/5/23.
  */
-
 public class MediaStoreLoader {
 
     private static final int DEFAULT_START_ID = 1000;
@@ -36,40 +34,7 @@ public class MediaStoreLoader {
     private final String TAG = "MediaLoader";
     private static final MediaStoreLoader loader = new MediaStoreLoader();
 
-    private final Map<String, Queue<LoaderTask>> mTaskGroup = new HashMap<>();
-
     private final Map<String, Integer> mIds = new HashMap<>();
-
-    private final int MSG_CODE_LOAD_FINISH = 101;
-    private final int MSG_CODE_LOAD_START = 102;
-
-    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case MSG_CODE_LOAD_FINISH:
-                    Message message = Message.obtain();
-                    message.what = MSG_CODE_LOAD_START;
-                    message.obj = msg.obj;
-                    sendMessage(message);
-                    break;
-                case MSG_CODE_LOAD_START:
-                    String group = (String) msg.obj;
-                    if (!TextUtils.isEmpty(group)) {
-                        Queue<LoaderTask> queue = mTaskGroup.get(group);
-                        if (queue != null) {
-                            LoaderTask task = queue.poll();
-                            if (task != null) {
-                                queueLoader(task.activity.get(), task.onLoaderCallBack);
-                            }
-                            Log.d(TAG, "after poll current group = " + group + " queue length = " + queue.size());
-                        }
-                    }
-                    break;
-            }
-        }
-    };
 
     private MediaStoreLoader() {
     }
@@ -78,8 +43,8 @@ public class MediaStoreLoader {
         return loader;
     }
 
-    private int checkIds(FragmentActivity activity) {
-        String name = activity.getClass().getName();
+    private <T extends LifecycleOwner & ViewModelStoreOwner> int checkIds(T owner) {
+        String name = owner.getClass().getName();
         int id;
         if (!mIds.containsKey(name)) {
             id = DEFAULT_START_ID;
@@ -93,77 +58,71 @@ public class MediaStoreLoader {
         return id;
     }
 
-    private synchronized void load(FragmentActivity activity, OnLoaderCallBack onLoaderCallBack) {
-
-        String name = activity.getClass().getSimpleName();
-        Queue<LoaderTask> queue = mTaskGroup.get(name);
-        LoaderTask task = new LoaderTask(new WeakReference<>(activity), onLoaderCallBack);
-        if (queue == null) {
-            queue = new LinkedList<>();
-            mTaskGroup.put(name, queue);
+    private <T extends LifecycleOwner & ViewModelStoreOwner> void load(T owner, OnLoaderCallBack onLoaderCallBack) {
+        Context context;
+        if (owner instanceof Activity) {
+            context = ((Activity) owner).getApplicationContext();
+        } else if (owner instanceof Fragment) {
+            context = ((Fragment) owner).requireContext().getApplicationContext();
+        } else {
+            throw new IllegalArgumentException("参数异常");
         }
-        queue.offer(task);
-        Log.d(TAG, "after offer current queue group = " + name + " queue length = " + queue.size());
-        if (queue.size() == 1) {
-            Message message = Message.obtain();
-            message.what = MSG_CODE_LOAD_START;
-            message.obj = name;
-            mHandler.sendMessage(message);
-        }
-    }
-
-    private void queueLoader(final FragmentActivity activity, OnLoaderCallBack onLoaderCallBack) {
-        LoaderManager.getInstance(activity).restartLoader(checkIds(activity), null, new AbsLoaderCallBack(activity, onLoaderCallBack) {
+        int id = checkIds(owner);
+        LoaderManager.getInstance(owner).initLoader(id, null, new AbsLoaderCallBack(context, onLoaderCallBack) {
             @Override
             public void onLoaderReset(Loader<Cursor> loader) {
                 super.onLoaderReset(loader);
-                Queue<LoaderTask> queue = mTaskGroup.get(activity.getClass().getSimpleName());
-                if (queue != null) {
-                    queue.clear();
-                }
+                mIds.clear();
                 Log.d(TAG, "***onLoaderReset***");
             }
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
                 super.onLoadFinished(loader, data);
-                Message message = Message.obtain();
-                message.what = MSG_CODE_LOAD_FINISH;
-                message.obj = activity.getClass().getSimpleName();
-                mHandler.sendMessage(message);
+                LoaderManager.getInstance(owner).destroyLoader(id);
                 Log.d(TAG, "***onLoaderFinished***");
             }
         });
     }
 
-    public void loadPhotos(FragmentActivity activity, OnPhotoLoaderCallBack onPhotoLoaderCallBack) {
+    public void loadPhotos(@NonNull Fragment fragment, OnPhotoLoaderCallBack onPhotoLoaderCallBack) {
+        load(fragment, onPhotoLoaderCallBack);
+    }
+
+    public void loadMediaFile(@NonNull Fragment fragment, OnMediaFileLoaderCallBack onMediaFileLoaderCallBack) {
+        load(fragment, onMediaFileLoaderCallBack);
+    }
+
+    public void loadVideos(@NonNull Fragment fragment, OnVideoLoaderCallBack onVideoLoaderCallBack) {
+        load(fragment, onVideoLoaderCallBack);
+    }
+
+    public void loadAudios(@NonNull Fragment fragment, OnAudioLoaderCallBack onAudioLoaderCallBack) {
+        load(fragment, onAudioLoaderCallBack);
+    }
+
+    public void loadFiles(@NonNull Fragment fragment, OnFileLoaderCallBack onFileLoaderCallBack) {
+        load(fragment, onFileLoaderCallBack);
+    }
+
+    public void loadPhotos(@NonNull FragmentActivity activity, OnPhotoLoaderCallBack onPhotoLoaderCallBack) {
         load(activity, onPhotoLoaderCallBack);
     }
 
-    public void loadMediaFile(FragmentActivity activity, OnMediaFileLoaderCallBack onMediaFileLoaderCallBack) {
+    public void loadMediaFile(@NonNull FragmentActivity activity, OnMediaFileLoaderCallBack onMediaFileLoaderCallBack) {
         load(activity, onMediaFileLoaderCallBack);
     }
 
-    public void loadVideos(FragmentActivity activity, OnVideoLoaderCallBack onVideoLoaderCallBack) {
+    public void loadVideos(@NonNull FragmentActivity activity, OnVideoLoaderCallBack onVideoLoaderCallBack) {
         load(activity, onVideoLoaderCallBack);
     }
 
-    public void loadAudios(FragmentActivity activity, OnAudioLoaderCallBack onAudioLoaderCallBack) {
+    public void loadAudios(@NonNull FragmentActivity activity, OnAudioLoaderCallBack onAudioLoaderCallBack) {
         load(activity, onAudioLoaderCallBack);
     }
 
-    public void loadFiles(FragmentActivity activity, OnFileLoaderCallBack onFileLoaderCallBack) {
+    public void loadFiles(@NonNull FragmentActivity activity, OnFileLoaderCallBack onFileLoaderCallBack) {
         load(activity, onFileLoaderCallBack);
-    }
-
-    public static class LoaderTask {
-        public WeakReference<FragmentActivity> activity;
-        public OnLoaderCallBack onLoaderCallBack;
-
-        public LoaderTask(WeakReference<FragmentActivity> activity, OnLoaderCallBack onLoaderCallBack) {
-            this.activity = activity;
-            this.onLoaderCallBack = onLoaderCallBack;
-        }
     }
 
 }

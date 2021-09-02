@@ -1,5 +1,6 @@
 package com.jiajunhui.xapp.medialoader;
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.jiajunhui.xapp.medialoader.callback.OnAudioLoaderCallBack;
@@ -21,7 +22,7 @@ public class MediaConfig {
     private long mFilterMaxFileSize;
     private long mFilterMinFileSize;
     private MediaType mMediaType;
-    private final FragmentActivity mActivity;
+    private FragmentActivity mActivity;
     public HashSet<String> mQueryMimeTypeHashSet;
     private OnPhotoLoaderCallBack mOnPhotoLoaderCallBack;
     private OnVideoLoaderCallBack mOnVideoLoaderCallBack;
@@ -29,9 +30,19 @@ public class MediaConfig {
     private OnMediaFileLoaderCallBack mOnMediaFileLoaderCallBack;
     private int mPageIndex;
     private int mPageSize;
+    private Fragment mFragment;
 
     public MediaConfig(FragmentActivity activity) {
         this.mActivity = activity;
+        initDefaultValue();
+    }
+
+    public MediaConfig(Fragment fragment) {
+        mFragment = fragment;
+        initDefaultValue();
+    }
+
+    public void initDefaultValue() {
         mMediaType = MediaType.PHOTO;
         mVideoMaxSecond = 0;
         mVideoMinSecond = 0;
@@ -136,19 +147,35 @@ public class MediaConfig {
         switch (mMediaType) {
             case PHOTO:
                 mOnPhotoLoaderCallBack.setMediaConfig(this);
-                MediaStoreLoader.getLoader().loadPhotos(mActivity, mOnPhotoLoaderCallBack);
+                if (mActivity != null) {
+                    MediaStoreLoader.getLoader().loadPhotos(mActivity, mOnPhotoLoaderCallBack);
+                } else if (mFragment != null) {
+                    MediaStoreLoader.getLoader().loadPhotos(mFragment, mOnPhotoLoaderCallBack);
+                }
                 break;
             case VIDEO:
                 mOnVideoLoaderCallBack.setMediaConfig(this);
-                MediaStoreLoader.getLoader().loadVideos(mActivity, mOnVideoLoaderCallBack);
+                if (mActivity != null) {
+                    MediaStoreLoader.getLoader().loadVideos(mActivity, mOnVideoLoaderCallBack);
+                } else if (mFragment != null) {
+                    MediaStoreLoader.getLoader().loadVideos(mFragment, mOnVideoLoaderCallBack);
+                }
                 break;
             case AUDIO:
                 mOnAudioLoaderCallBack.setMediaConfig(this);
-                MediaStoreLoader.getLoader().loadAudios(mActivity, mOnAudioLoaderCallBack);
+                if (mActivity != null) {
+                    MediaStoreLoader.getLoader().loadAudios(mActivity, mOnAudioLoaderCallBack);
+                } else if (mFragment != null) {
+                    MediaStoreLoader.getLoader().loadAudios(mFragment, mOnAudioLoaderCallBack);
+                }
                 break;
             case ALL:
                 mOnMediaFileLoaderCallBack.setMediaConfig(this);
-                MediaStoreLoader.getLoader().loadMediaFile(mActivity, mOnMediaFileLoaderCallBack);
+                if (mActivity != null) {
+                    MediaStoreLoader.getLoader().loadMediaFile(mActivity, mOnMediaFileLoaderCallBack);
+                } else if (mFragment != null) {
+                    MediaStoreLoader.getLoader().loadMediaFile(mFragment, mOnMediaFileLoaderCallBack);
+                }
                 break;
         }
     }

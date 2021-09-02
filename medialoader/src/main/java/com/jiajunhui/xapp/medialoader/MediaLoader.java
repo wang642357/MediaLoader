@@ -1,5 +1,6 @@
 package com.jiajunhui.xapp.medialoader;
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 /**
@@ -10,6 +11,10 @@ public class MediaLoader {
 
     public static MediaConfig with(FragmentActivity activity) {
         return new MediaConfig(activity);
+    }
+
+    public static MediaConfig with(Fragment fragment) {
+        return new MediaConfig(fragment);
     }
 
 }

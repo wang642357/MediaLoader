@@ -65,21 +65,21 @@ public class TestFragment extends Fragment {
         loadAudios();
         loadVideos();
         final StringBuilder mInfos = new StringBuilder();
-        MediaStoreLoader.getLoader().loadFiles(getActivity(), new OnFileLoaderCallBack(FileType.DOC) {
+        MediaStoreLoader.getLoader().loadFiles(this, new OnFileLoaderCallBack(FileType.DOC) {
             @Override
             public void onResult(FileResult result) {
                 mInfos.append("doc file : " + result.getItems().size()).append("\n");
             }
         });
 
-        MediaStoreLoader.getLoader().loadFiles(getActivity(), new OnFileLoaderCallBack(FileType.ZIP) {
+        MediaStoreLoader.getLoader().loadFiles(this, new OnFileLoaderCallBack(FileType.ZIP) {
             @Override
             public void onResult(FileResult result) {
                 mInfos.append("zip file : " + result.getItems().size()).append("\n");
             }
         });
 
-        MediaStoreLoader.getLoader().loadFiles(getActivity(), new OnFileLoaderCallBack(FileType.APK) {
+        MediaStoreLoader.getLoader().loadFiles(this, new OnFileLoaderCallBack(FileType.APK) {
             @Override
             public void onResult(FileResult result) {
                 mInfos.append("apk file : " + result.getItems().size()).append("\n");
@@ -90,7 +90,7 @@ public class TestFragment extends Fragment {
     }
 
     private void loadPhotos() {
-        MediaStoreLoader.getLoader().loadPhotos(getActivity(), new OnPhotoLoaderCallBack() {
+        MediaStoreLoader.getLoader().loadPhotos(this, new OnPhotoLoaderCallBack() {
             @Override
             public void onResult(PhotoResult result) {
                 Log.d(TAG, "onResult photo ...");
@@ -100,7 +100,7 @@ public class TestFragment extends Fragment {
     }
 
     private void loadAudios() {
-        MediaStoreLoader.getLoader().loadAudios(getActivity(), new OnAudioLoaderCallBack() {
+        MediaStoreLoader.getLoader().loadAudios(this, new OnAudioLoaderCallBack() {
             @Override
             public void onResult(AudioResult result) {
                 Log.d(TAG, "onResult audio ...");
@@ -110,7 +110,7 @@ public class TestFragment extends Fragment {
     }
 
     private void loadVideos() {
-        MediaStoreLoader.getLoader().loadVideos(getActivity(), new OnVideoLoaderCallBack() {
+        MediaStoreLoader.getLoader().loadVideos(this, new OnVideoLoaderCallBack() {
             @Override
             public void onResult(VideoResult result) {
                 Log.d(TAG, "onResult video ...");
