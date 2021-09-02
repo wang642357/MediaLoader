@@ -2,6 +2,8 @@ package com.jiajunhui.xapp.medialoader.callback;
 
 import android.provider.MediaStore;
 
+import androidx.annotation.NonNull;
+
 import com.jiajunhui.xapp.medialoader.MediaConfig;
 
 /**
@@ -16,7 +18,7 @@ public abstract class BaseLoaderCallBack<T> extends OnLoaderCallBack {
         mMediaConfig = mediaConfig;
     }
 
-    public abstract void onResult(T result);
+    public abstract void onResult(@NonNull T result);
 
     @Override
     public String getSelections() {

@@ -20,7 +20,6 @@ import com.jiajunhui.xapp.medialoader.bean.AudioResult;
 import com.jiajunhui.xapp.medialoader.bean.FileResult;
 import com.jiajunhui.xapp.medialoader.bean.FileType;
 import com.jiajunhui.xapp.medialoader.bean.MediaFolder;
-import com.jiajunhui.xapp.medialoader.bean.MediaItem;
 import com.jiajunhui.xapp.medialoader.bean.MediaResult;
 import com.jiajunhui.xapp.medialoader.bean.PhotoResult;
 import com.jiajunhui.xapp.medialoader.bean.VideoResult;
@@ -150,10 +149,7 @@ public class MainActivity extends AppCompatActivity {
                 for (MediaFolder folder : result.getFolders()) {
                     Log.e("----", folder + "");
                 }
-                for (MediaItem folder : result.getItems()) {
-                    Log.e("----", folder + "");
-                }
-                mInfos.append("media file : " + result.getItems().size()).append("\n");
+                mInfos.append("media file : " + result.getTotalSize()).append("\n");
                 mInfos.append("consume time : " + (System.currentTimeMillis() - start)).append("ms");
                 tv_file_info.setText(mInfos.toString());
             }

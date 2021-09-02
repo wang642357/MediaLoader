@@ -1,5 +1,6 @@
 package com.jiajunhui.xapp.medialoader;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -32,12 +33,12 @@ public class MediaConfig {
     private int mPageSize;
     private Fragment mFragment;
 
-    public MediaConfig(FragmentActivity activity) {
+    public MediaConfig(@NonNull FragmentActivity activity) {
         this.mActivity = activity;
         initDefaultValue();
     }
 
-    public MediaConfig(Fragment fragment) {
+    public MediaConfig(@NonNull Fragment fragment) {
         mFragment = fragment;
         initDefaultValue();
     }
@@ -68,22 +69,22 @@ public class MediaConfig {
         return this;
     }
 
-    public MediaConfig setOnPhotoLoaderCallBack(OnPhotoLoaderCallBack onPhotoLoaderCallBack) {
+    public MediaConfig setOnPhotoLoaderCallBack(@NonNull OnPhotoLoaderCallBack onPhotoLoaderCallBack) {
         mOnPhotoLoaderCallBack = onPhotoLoaderCallBack;
         return this;
     }
 
-    public MediaConfig setOnVideoLoaderCallBack(OnVideoLoaderCallBack onVideoLoaderCallBack) {
+    public MediaConfig setOnVideoLoaderCallBack(@NonNull OnVideoLoaderCallBack onVideoLoaderCallBack) {
         mOnVideoLoaderCallBack = onVideoLoaderCallBack;
         return this;
     }
 
-    public MediaConfig setOnAudioLoaderCallBack(OnAudioLoaderCallBack onAudioLoaderCallBack) {
+    public MediaConfig setOnAudioLoaderCallBack(@NonNull OnAudioLoaderCallBack onAudioLoaderCallBack) {
         mOnAudioLoaderCallBack = onAudioLoaderCallBack;
         return this;
     }
 
-    public MediaConfig setOnMediaFileLoaderCallBack(OnMediaFileLoaderCallBack onMediaFileLoaderCallBack) {
+    public MediaConfig setOnMediaFileLoaderCallBack(@NonNull OnMediaFileLoaderCallBack onMediaFileLoaderCallBack) {
         mOnMediaFileLoaderCallBack = onMediaFileLoaderCallBack;
         return this;
     }
@@ -92,8 +93,9 @@ public class MediaConfig {
         return mFilterMaxFileSize;
     }
 
-    public void setFilterMaxFileSize(long filterMaxFileSize) {
+    public MediaConfig setFilterMaxFileSize(long filterMaxFileSize) {
         mFilterMaxFileSize = filterMaxFileSize;
+        return this;
     }
 
     public long getFilterMinFileSize() {
@@ -104,8 +106,9 @@ public class MediaConfig {
         return mMediaType;
     }
 
-    public void setFilterMinFileSize(long filterMinFileSize) {
+    public MediaConfig setFilterMinFileSize(long filterMinFileSize) {
         mFilterMinFileSize = filterMinFileSize;
+        return this;
     }
 
     public long getVideoMaxSecond() {
@@ -146,7 +149,9 @@ public class MediaConfig {
     public void load() {
         switch (mMediaType) {
             case PHOTO:
-                mOnPhotoLoaderCallBack.setMediaConfig(this);
+                if (mOnPhotoLoaderCallBack != null) {
+                    mOnPhotoLoaderCallBack.setMediaConfig(this);
+                }
                 if (mActivity != null) {
                     MediaStoreLoader.getLoader().loadPhotos(mActivity, mOnPhotoLoaderCallBack);
                 } else if (mFragment != null) {
@@ -154,7 +159,9 @@ public class MediaConfig {
                 }
                 break;
             case VIDEO:
-                mOnVideoLoaderCallBack.setMediaConfig(this);
+                if (mOnVideoLoaderCallBack != null) {
+                    mOnVideoLoaderCallBack.setMediaConfig(this);
+                }
                 if (mActivity != null) {
                     MediaStoreLoader.getLoader().loadVideos(mActivity, mOnVideoLoaderCallBack);
                 } else if (mFragment != null) {
@@ -162,7 +169,9 @@ public class MediaConfig {
                 }
                 break;
             case AUDIO:
-                mOnAudioLoaderCallBack.setMediaConfig(this);
+                if (mOnAudioLoaderCallBack != null) {
+                    mOnAudioLoaderCallBack.setMediaConfig(this);
+                }
                 if (mActivity != null) {
                     MediaStoreLoader.getLoader().loadAudios(mActivity, mOnAudioLoaderCallBack);
                 } else if (mFragment != null) {
@@ -170,7 +179,9 @@ public class MediaConfig {
                 }
                 break;
             case ALL:
-                mOnMediaFileLoaderCallBack.setMediaConfig(this);
+                if (mOnMediaFileLoaderCallBack != null) {
+                    mOnMediaFileLoaderCallBack.setMediaConfig(this);
+                }
                 if (mActivity != null) {
                     MediaStoreLoader.getLoader().loadMediaFile(mActivity, mOnMediaFileLoaderCallBack);
                 } else if (mFragment != null) {

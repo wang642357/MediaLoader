@@ -21,6 +21,7 @@ import static android.provider.MediaStore.MediaColumns.DATA;
 import static android.provider.MediaStore.MediaColumns.DATE_MODIFIED;
 import static android.provider.MediaStore.MediaColumns.DISPLAY_NAME;
 import static android.provider.MediaStore.MediaColumns.DURATION;
+import static android.provider.MediaStore.MediaColumns.MIME_TYPE;
 import static android.provider.MediaStore.MediaColumns.SIZE;
 
 
@@ -38,7 +39,7 @@ public abstract class OnMediaFileLoaderCallBack extends BaseLoaderCallBack<Media
                 MediaStore.MediaColumns.MIME_TYPE,
                 MediaStore.MediaColumns.WIDTH,
                 MediaStore.MediaColumns.HEIGHT,
-                DURATION,
+                MediaStore.MediaColumns.DURATION,
                 MediaStore.MediaColumns.SIZE,
                 MediaStore.MediaColumns.BUCKET_DISPLAY_NAME,
                 MediaStore.MediaColumns.DISPLAY_NAME,
@@ -83,9 +84,8 @@ public abstract class OnMediaFileLoaderCallBack extends BaseLoaderCallBack<Media
     @Override
     public void onLoadFinish(Loader<Cursor> loader, Cursor data) {
         List<MediaFolder> folders = new ArrayList<>();
-        List<MediaItem> allPhotos = new ArrayList<>();
         if (data == null) {
-            onResult(new MediaResult(folders, allPhotos));
+            onResult(new MediaResult(folders));
             return;
         }
         MediaFolder folder;
@@ -100,10 +100,11 @@ public abstract class OnMediaFileLoaderCallBack extends BaseLoaderCallBack<Media
             String path = data.getString(data.getColumnIndexOrThrow(DATA));
             long modified = data.getLong(data.getColumnIndexOrThrow(DATE_MODIFIED));
             long duration = data.getLong(data.getColumnIndexOrThrow(DURATION));
+            String mineType = data.getString(data.getColumnIndexOrThrow(MIME_TYPE));
             folder = new MediaFolder();
             folder.setId(folderId);
             folder.setName(folderName);
-            item = new MediaItem(imageId, name, path, size, modified, duration);
+            item = new MediaItem(imageId, name, path, size, modified, duration, mineType);
             if (folders.contains(folder)) {
                 folders.get(folders.indexOf(folder)).addItem(item);
             } else {
@@ -111,9 +112,8 @@ public abstract class OnMediaFileLoaderCallBack extends BaseLoaderCallBack<Media
                 folder.addItem(item);
                 folders.add(folder);
             }
-            allPhotos.add(item);
             sum_size += size;
         }
-        onResult(new MediaResult(folders, allPhotos, sum_size));
+        onResult(new MediaResult(folders, sum_size));
     }
 }

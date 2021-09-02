@@ -8,20 +8,17 @@ import java.util.List;
  */
 public class MediaResult extends BaseResult {
     private List<MediaFolder> folders;
-    private List<MediaItem> items;
 
     public MediaResult() {
     }
 
-    public MediaResult(List<MediaFolder> folders, List<MediaItem> items) {
+    public MediaResult(List<MediaFolder> folders) {
         this.folders = folders;
-        this.items = items;
     }
 
-    public MediaResult(List<MediaFolder> folders, List<MediaItem> items, long totalSize) {
+    public MediaResult(List<MediaFolder> folders, long totalSize) {
         super(totalSize);
         this.folders = folders;
-        this.items = items;
     }
 
     public List<MediaFolder> getFolders() {
@@ -32,19 +29,10 @@ public class MediaResult extends BaseResult {
         this.folders = folders;
     }
 
-    public List<MediaItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<MediaItem> items) {
-        this.items = items;
-    }
-
     @Override
     public String toString() {
         return "MediaResult{" +
                 "folders=" + folders +
-                ", items=" + items +
                 '}';
     }
 }

@@ -23,14 +23,16 @@ package com.jiajunhui.xapp.medialoader.bean;
 public class MediaItem extends BaseItem {
 
     private long duration;
+    private String mineType;
     private boolean checked;
 
     public MediaItem() {
     }
 
-    public MediaItem(int id, String displayName, String path, long size, long modified, long duration) {
+    public MediaItem(int id, String displayName, String path, long size, long modified, long duration, String mineType) {
         super(id, displayName, path, size, modified);
         this.duration = duration;
+        this.mineType = mineType;
     }
 
     public long getDuration() {
@@ -49,6 +51,14 @@ public class MediaItem extends BaseItem {
         this.checked = checked;
     }
 
+    public String getMineType() {
+        return mineType;
+    }
+
+    public void setMineType(String mineType) {
+        this.mineType = mineType;
+    }
+
     @Override
     public String toString() {
         return "BaseItem{" +
@@ -59,6 +69,7 @@ public class MediaItem extends BaseItem {
                 ", path='" + getPath() + '\'' +
                 ", size=" + getSize() +
                 ", modified=" + getModified() +
+                ", mineType=" + getMineType() +
                 '}';
     }
 }
