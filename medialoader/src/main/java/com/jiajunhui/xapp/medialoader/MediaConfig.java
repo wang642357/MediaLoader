@@ -4,10 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.jiajunhui.xapp.medialoader.callback.OnAudioLoaderCallBack;
 import com.jiajunhui.xapp.medialoader.callback.OnMediaFileLoaderCallBack;
-import com.jiajunhui.xapp.medialoader.callback.OnPhotoLoaderCallBack;
-import com.jiajunhui.xapp.medialoader.callback.OnVideoLoaderCallBack;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -25,9 +22,6 @@ public class MediaConfig {
     private MediaType mMediaType;
     private FragmentActivity mActivity;
     public HashSet<String> mQueryMimeTypeHashSet;
-    private OnPhotoLoaderCallBack mOnPhotoLoaderCallBack;
-    private OnVideoLoaderCallBack mOnVideoLoaderCallBack;
-    private OnAudioLoaderCallBack mOnAudioLoaderCallBack;
     private OnMediaFileLoaderCallBack mOnMediaFileLoaderCallBack;
     private int mPageIndex;
     private int mPageSize;
@@ -66,21 +60,6 @@ public class MediaConfig {
 
     public MediaConfig setMediaType(MediaType mediaType) {
         mMediaType = mediaType;
-        return this;
-    }
-
-    public MediaConfig setOnPhotoLoaderCallBack(@NonNull OnPhotoLoaderCallBack onPhotoLoaderCallBack) {
-        mOnPhotoLoaderCallBack = onPhotoLoaderCallBack;
-        return this;
-    }
-
-    public MediaConfig setOnVideoLoaderCallBack(@NonNull OnVideoLoaderCallBack onVideoLoaderCallBack) {
-        mOnVideoLoaderCallBack = onVideoLoaderCallBack;
-        return this;
-    }
-
-    public MediaConfig setOnAudioLoaderCallBack(@NonNull OnAudioLoaderCallBack onAudioLoaderCallBack) {
-        mOnAudioLoaderCallBack = onAudioLoaderCallBack;
         return this;
     }
 
@@ -147,47 +126,13 @@ public class MediaConfig {
     }
 
     public void load() {
-        switch (mMediaType) {
-            case PHOTO:
-                if (mOnPhotoLoaderCallBack != null) {
-                    mOnPhotoLoaderCallBack.setMediaConfig(this);
-                }
-                if (mActivity != null) {
-                    MediaStoreLoader.getLoader().loadPhotos(mActivity, mOnPhotoLoaderCallBack);
-                } else if (mFragment != null) {
-                    MediaStoreLoader.getLoader().loadPhotos(mFragment, mOnPhotoLoaderCallBack);
-                }
-                break;
-            case VIDEO:
-                if (mOnVideoLoaderCallBack != null) {
-                    mOnVideoLoaderCallBack.setMediaConfig(this);
-                }
-                if (mActivity != null) {
-                    MediaStoreLoader.getLoader().loadVideos(mActivity, mOnVideoLoaderCallBack);
-                } else if (mFragment != null) {
-                    MediaStoreLoader.getLoader().loadVideos(mFragment, mOnVideoLoaderCallBack);
-                }
-                break;
-            case AUDIO:
-                if (mOnAudioLoaderCallBack != null) {
-                    mOnAudioLoaderCallBack.setMediaConfig(this);
-                }
-                if (mActivity != null) {
-                    MediaStoreLoader.getLoader().loadAudios(mActivity, mOnAudioLoaderCallBack);
-                } else if (mFragment != null) {
-                    MediaStoreLoader.getLoader().loadAudios(mFragment, mOnAudioLoaderCallBack);
-                }
-                break;
-            case ALL:
-                if (mOnMediaFileLoaderCallBack != null) {
-                    mOnMediaFileLoaderCallBack.setMediaConfig(this);
-                }
-                if (mActivity != null) {
-                    MediaStoreLoader.getLoader().loadMediaFile(mActivity, mOnMediaFileLoaderCallBack);
-                } else if (mFragment != null) {
-                    MediaStoreLoader.getLoader().loadMediaFile(mFragment, mOnMediaFileLoaderCallBack);
-                }
-                break;
+        if (mOnMediaFileLoaderCallBack != null) {
+            mOnMediaFileLoaderCallBack.setMediaConfig(this);
+            if (mActivity != null) {
+                MediaStoreLoader.getLoader().loadMediaFile(mActivity, mOnMediaFileLoaderCallBack);
+            } else if (mFragment != null) {
+                MediaStoreLoader.getLoader().loadMediaFile(mFragment, mOnMediaFileLoaderCallBack);
+            }
         }
     }
 }
