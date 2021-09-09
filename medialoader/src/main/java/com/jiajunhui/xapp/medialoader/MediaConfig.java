@@ -25,6 +25,7 @@ public class MediaConfig {
     private OnMediaFileLoaderCallBack mOnMediaFileLoaderCallBack;
     private int mPageIndex;
     private int mPageSize;
+    private long folderId = -1;
     private Fragment mFragment;
 
     public MediaConfig(@NonNull FragmentActivity activity) {
@@ -113,6 +114,15 @@ public class MediaConfig {
 
     public MediaConfig setPageSize(int pageSize) {
         mPageSize = pageSize;
+        return this;
+    }
+
+    public long getFolderId() {
+        return folderId;
+    }
+
+    public MediaConfig setFolderId(long folderId) {
+        this.folderId = folderId;
         return this;
     }
 

@@ -1,7 +1,6 @@
 package com.jiajunhui.xapp.medialoaderdemo;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +10,19 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.jiajunhui.xapp.medialoader.MediaLoader;
 import com.jiajunhui.xapp.medialoader.MediaStoreLoader;
-import com.jiajunhui.xapp.medialoader.bean.AudioResult;
+import com.jiajunhui.xapp.medialoader.MediaType;
 import com.jiajunhui.xapp.medialoader.bean.FileResult;
 import com.jiajunhui.xapp.medialoader.bean.FileType;
-import com.jiajunhui.xapp.medialoader.bean.PhotoResult;
-import com.jiajunhui.xapp.medialoader.bean.VideoResult;
-import com.jiajunhui.xapp.medialoader.callback.OnAudioLoaderCallBack;
+import com.jiajunhui.xapp.medialoader.bean.MediaFolder;
+import com.jiajunhui.xapp.medialoader.bean.MediaItem;
+import com.jiajunhui.xapp.medialoader.bean.MediaResult;
 import com.jiajunhui.xapp.medialoader.callback.OnFileLoaderCallBack;
-import com.jiajunhui.xapp.medialoader.callback.OnPhotoLoaderCallBack;
-import com.jiajunhui.xapp.medialoader.callback.OnVideoLoaderCallBack;
+import com.jiajunhui.xapp.medialoader.callback.OnMediaFileLoaderCallBack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestFragment extends Fragment {
 
@@ -90,33 +92,45 @@ public class TestFragment extends Fragment {
     }
 
     private void loadPhotos() {
-        MediaStoreLoader.getLoader().loadPhotos(this, new OnPhotoLoaderCallBack() {
+        MediaLoader.with(this).setOnMediaFileLoaderCallBack(new OnMediaFileLoaderCallBack() {
             @Override
-            public void onResult(PhotoResult result) {
-                Log.d(TAG, "onResult photo ...");
-                tv_photo_info.setText("图片: " + result.getItems().size() + " 张");
+            public void onResult(MediaResult result) {
+                List<MediaItem> list = new ArrayList<>();
+                for (MediaFolder folder : result.getFolders()) {
+                    list.addAll(folder.getItems());
+                }
+                tv_photo_info.setText("图片: " + list.size() + " 张");
             }
-        });
+        }).setPageIndex(0).setPageSize(30).setVideoMaxSecond(10000)
+                .setMediaType(MediaType.PHOTO).load();
     }
 
     private void loadAudios() {
-        MediaStoreLoader.getLoader().loadAudios(this, new OnAudioLoaderCallBack() {
+        MediaLoader.with(this).setOnMediaFileLoaderCallBack(new OnMediaFileLoaderCallBack() {
             @Override
-            public void onResult(AudioResult result) {
-                Log.d(TAG, "onResult audio ...");
-                tv_audio_info.setText("音乐: " + result.getItems().size() + " 个");
+            public void onResult(MediaResult result) {
+                List<MediaItem> list = new ArrayList<>();
+                for (MediaFolder folder : result.getFolders()) {
+                    list.addAll(folder.getItems());
+                }
+                tv_audio_info.setText("音乐: " + list.size() + " 个");
             }
-        });
+        }).setPageIndex(0).setPageSize(30).setVideoMaxSecond(10000)
+                .setMediaType(MediaType.AUDIO).load();
     }
 
     private void loadVideos() {
-        MediaStoreLoader.getLoader().loadVideos(this, new OnVideoLoaderCallBack() {
+        MediaLoader.with(this).setOnMediaFileLoaderCallBack(new OnMediaFileLoaderCallBack() {
             @Override
-            public void onResult(VideoResult result) {
-                Log.d(TAG, "onResult video ...");
-                tv_video_info.setText("视频: " + result.getItems().size() + " 个");
+            public void onResult(MediaResult result) {
+                List<MediaItem> list = new ArrayList<>();
+                for (MediaFolder folder : result.getFolders()) {
+                    list.addAll(folder.getItems());
+                }
+                tv_photo_info.setText("视频: " + list.size() + " 张");
             }
-        });
+        }).setPageIndex(0).setPageSize(30).setVideoMaxSecond(10000)
+                .setMediaType(MediaType.VIDEO).load();
     }
 
     @Override

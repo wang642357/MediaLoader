@@ -17,27 +17,28 @@
 package com.jiajunhui.xapp.medialoader.bean;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Created by Taurus on 2016/8/29.
  */
 public class BaseFolder implements Serializable {
-    private String id;
+    private long id;
     private String name;
 
     public BaseFolder() {
     }
 
-    public BaseFolder(String id, String name) {
+    public BaseFolder(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -47,5 +48,19 @@ public class BaseFolder implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BaseFolder that = (BaseFolder) o;
+        return id == that.id &&
+                name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }

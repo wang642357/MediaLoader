@@ -92,7 +92,7 @@ public abstract class OnMediaFileLoaderCallBack extends BaseLoaderCallBack<Media
         MediaItem item;
         long sum_size = 0;
         while (data.moveToNext()) {
-            String folderId = data.getString(data.getColumnIndexOrThrow(BUCKET_ID));
+            long folderId = data.getLong(data.getColumnIndexOrThrow(BUCKET_ID));
             String folderName = data.getString(data.getColumnIndexOrThrow(BUCKET_DISPLAY_NAME));
             int imageId = data.getInt(data.getColumnIndexOrThrow(_ID));
             String name = data.getString(data.getColumnIndexOrThrow(DISPLAY_NAME));

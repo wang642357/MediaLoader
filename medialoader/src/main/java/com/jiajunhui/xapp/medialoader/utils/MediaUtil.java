@@ -18,36 +18,52 @@ import java.util.Locale;
 public class MediaUtil {
     private static final String NOT_GIF_UNKNOWN = "!='image/*'";
     private static final String NOT_GIF = " AND (" + MediaStore.MediaColumns.MIME_TYPE + "!='image/gif' AND " + MediaStore.MediaColumns.MIME_TYPE + NOT_GIF_UNKNOWN + ")";
+    private static final String COLUMN_BUCKET_ID = "bucket_id";
 
     public static String getPageSelection(MediaConfig config) {
         String durationCondition = getDurationCondition(config);
         String sizeCondition = getFileSizeCondition(config);
         String queryMimeCondition = getQueryMimeCondition(config);
         if (config.getMediaType() == MediaType.ALL) {
-            return getPageSelectionArgsForAllMediaCondition(queryMimeCondition, durationCondition, sizeCondition);
+            return getPageSelectionArgsForAllMediaCondition(config.getFolderId(), queryMimeCondition, durationCondition, sizeCondition);
         } else if (config.getMediaType() == MediaType.PHOTO) {
-            return getPageSelectionArgsForImageMediaCondition(queryMimeCondition, sizeCondition);
+            return getPageSelectionArgsForImageMediaCondition(config.getFolderId(), queryMimeCondition, sizeCondition);
         } else if (config.getMediaType() == MediaType.VIDEO || config.getMediaType() == MediaType.AUDIO) {
-            return getPageSelectionArgsForVideoOrAudioMediaCondition(queryMimeCondition, durationCondition, sizeCondition);
+            return getPageSelectionArgsForVideoOrAudioMediaCondition(config.getFolderId(), queryMimeCondition, durationCondition, sizeCondition);
         } else {
             return null;
         }
     }
 
-    private static String getPageSelectionArgsForAllMediaCondition(String queryMimeCondition, String durationCondition, String sizeCondition) {
-        return "(" + MediaStore.Files.FileColumns.MEDIA_TYPE +
-                "=?" + queryMimeCondition + " OR " + MediaStore.Files.FileColumns.MEDIA_TYPE + "=? AND " + durationCondition + ") AND " +
-                sizeCondition;
+    private static String getPageSelectionArgsForAllMediaCondition(long bucketId, String queryMimeCondition, String durationCondition, String sizeCondition) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("(").append(MediaStore.Files.FileColumns.MEDIA_TYPE)
+                .append("=?").append(queryMimeCondition).append(" OR ").append(MediaStore.Files.FileColumns.MEDIA_TYPE).append("=? AND ").append(durationCondition).append(") AND ");
+        if (bucketId == -1) {
+            return stringBuilder.append(sizeCondition).toString();
+        } else {
+            return stringBuilder.append(COLUMN_BUCKET_ID).append("=? AND ").append(sizeCondition).toString();
+        }
     }
 
-    private static String getPageSelectionArgsForImageMediaCondition(String queryMimeCondition, String sizeCondition) {
-        return "(" + MediaStore.Files.FileColumns.MEDIA_TYPE + "=?" +
-                queryMimeCondition + ") AND " + sizeCondition;
+    private static String getPageSelectionArgsForImageMediaCondition(long bucketId, String queryMimeCondition, String sizeCondition) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("(").append(MediaStore.Files.FileColumns.MEDIA_TYPE).append("=?");
+        if (bucketId == -1) {
+            return stringBuilder.append(queryMimeCondition).append(") AND ").append(sizeCondition).toString();
+        } else {
+            return stringBuilder.append(queryMimeCondition).append(") AND ").append(COLUMN_BUCKET_ID).append("=? AND ").append(sizeCondition).toString();
+        }
     }
 
-    private static String getPageSelectionArgsForVideoOrAudioMediaCondition(String queryMimeCondition, String durationCondition, String sizeCondition) {
-        return "(" + MediaStore.Files.FileColumns.MEDIA_TYPE + "=?" + queryMimeCondition + " AND " + durationCondition + ") AND " +
-                sizeCondition;
+    private static String getPageSelectionArgsForVideoOrAudioMediaCondition(long bucketId, String queryMimeCondition, String durationCondition, String sizeCondition) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("(").append(MediaStore.Files.FileColumns.MEDIA_TYPE).append("=?").append(queryMimeCondition).append(" AND ").append(durationCondition).append(") AND ");
+        if (bucketId == -1) {
+            return stringBuilder.append(sizeCondition).toString();
+        } else {
+            return stringBuilder.append(COLUMN_BUCKET_ID).append("=? AND ").append(sizeCondition).toString();
+        }
     }
 
     public static String getDurationCondition(MediaConfig config) {
@@ -105,17 +121,26 @@ public class MediaUtil {
 
     public static String[] getPageSelectionArgs(MediaConfig config) {
         MediaType mediaType = config.getMediaType();
+        long bucketId = config.getFolderId();
         if (mediaType == MediaType.ALL) {
+            if (bucketId == -1) {
+                // ofAll
+                return new String[]{
+                        String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE),
+                        String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO),
+                };
+            }
             return new String[]{
                     String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE),
                     String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO),
+                    String.valueOf(bucketId)
             };
         } else if (mediaType == MediaType.PHOTO) {
-            return new String[]{String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE)};
+            return bucketId == -1 ? new String[]{String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE)} : new String[]{String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE), String.valueOf(bucketId)};
         } else if (mediaType == MediaType.VIDEO) {
-            return new String[]{String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO)};
+            return bucketId == -1 ? new String[]{String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO)} : new String[]{String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO), String.valueOf(bucketId)};
         } else if (mediaType == MediaType.AUDIO) {
-            return new String[]{String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO)};
+            return bucketId == -1 ? new String[]{String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO)} : new String[]{String.valueOf(MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO), String.valueOf(bucketId)};
         } else {
             return null;
         }

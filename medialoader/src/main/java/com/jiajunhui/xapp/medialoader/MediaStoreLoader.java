@@ -13,12 +13,9 @@ import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
-import com.jiajunhui.xapp.medialoader.callback.OnAudioLoaderCallBack;
 import com.jiajunhui.xapp.medialoader.callback.OnFileLoaderCallBack;
 import com.jiajunhui.xapp.medialoader.callback.OnLoaderCallBack;
 import com.jiajunhui.xapp.medialoader.callback.OnMediaFileLoaderCallBack;
-import com.jiajunhui.xapp.medialoader.callback.OnPhotoLoaderCallBack;
-import com.jiajunhui.xapp.medialoader.callback.OnVideoLoaderCallBack;
 import com.jiajunhui.xapp.medialoader.loader.AbsLoaderCallBack;
 
 import java.util.HashMap;
@@ -85,40 +82,16 @@ public class MediaStoreLoader {
         });
     }
 
-    public void loadPhotos(@NonNull Fragment fragment, OnPhotoLoaderCallBack onPhotoLoaderCallBack) {
-        load(fragment, onPhotoLoaderCallBack);
-    }
-
     public void loadMediaFile(@NonNull Fragment fragment, OnMediaFileLoaderCallBack onMediaFileLoaderCallBack) {
         load(fragment, onMediaFileLoaderCallBack);
-    }
-
-    public void loadVideos(@NonNull Fragment fragment, OnVideoLoaderCallBack onVideoLoaderCallBack) {
-        load(fragment, onVideoLoaderCallBack);
-    }
-
-    public void loadAudios(@NonNull Fragment fragment, OnAudioLoaderCallBack onAudioLoaderCallBack) {
-        load(fragment, onAudioLoaderCallBack);
-    }
-
-    public void loadFiles(@NonNull Fragment fragment, OnFileLoaderCallBack onFileLoaderCallBack) {
-        load(fragment, onFileLoaderCallBack);
-    }
-
-    public void loadPhotos(@NonNull FragmentActivity activity, OnPhotoLoaderCallBack onPhotoLoaderCallBack) {
-        load(activity, onPhotoLoaderCallBack);
     }
 
     public void loadMediaFile(@NonNull FragmentActivity activity, OnMediaFileLoaderCallBack onMediaFileLoaderCallBack) {
         load(activity, onMediaFileLoaderCallBack);
     }
 
-    public void loadVideos(@NonNull FragmentActivity activity, OnVideoLoaderCallBack onVideoLoaderCallBack) {
-        load(activity, onVideoLoaderCallBack);
-    }
-
-    public void loadAudios(@NonNull FragmentActivity activity, OnAudioLoaderCallBack onAudioLoaderCallBack) {
-        load(activity, onAudioLoaderCallBack);
+    public void loadFiles(@NonNull Fragment fragment, OnFileLoaderCallBack onFileLoaderCallBack) {
+        load(fragment, onFileLoaderCallBack);
     }
 
     public void loadFiles(@NonNull FragmentActivity activity, OnFileLoaderCallBack onFileLoaderCallBack) {
