@@ -16,6 +16,7 @@ import androidx.loader.content.Loader;
 import com.jiajunhui.xapp.medialoader.callback.OnFileLoaderCallBack;
 import com.jiajunhui.xapp.medialoader.callback.OnLoaderCallBack;
 import com.jiajunhui.xapp.medialoader.callback.OnMediaFileLoaderCallBack;
+import com.jiajunhui.xapp.medialoader.callback.OnMediaFolderLoaderCallBack;
 import com.jiajunhui.xapp.medialoader.loader.AbsLoaderCallBack;
 
 import java.util.HashMap;
@@ -98,4 +99,11 @@ public class MediaStoreLoader {
         load(activity, onFileLoaderCallBack);
     }
 
+    public void loadFolders(@NonNull FragmentActivity activity, OnMediaFolderLoaderCallBack onFolderLoaderCallBack) {
+        load(activity, onFolderLoaderCallBack);
+    }
+
+    public void loadFolders(@NonNull Fragment fragment, OnMediaFolderLoaderCallBack onFolderLoaderCallBack) {
+        load(fragment, onFolderLoaderCallBack);
+    }
 }

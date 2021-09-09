@@ -102,13 +102,13 @@ public abstract class OnMediaFileLoaderCallBack extends BaseLoaderCallBack<Media
             long duration = data.getLong(data.getColumnIndexOrThrow(DURATION));
             String mineType = data.getString(data.getColumnIndexOrThrow(MIME_TYPE));
             folder = new MediaFolder();
-            folder.setId(folderId);
-            folder.setName(folderName);
+            folder.setFolderId(folderId);
+            folder.setFolderName(folderName);
             item = new MediaItem(imageId, name, path, size, modified, duration, mineType);
             if (folders.contains(folder)) {
                 folders.get(folders.indexOf(folder)).addItem(item);
             } else {
-                folder.setCover(path);
+                folder.setFolderCover(path);
                 folder.addItem(item);
                 folders.add(folder);
             }

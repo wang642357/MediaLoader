@@ -23,6 +23,7 @@ import com.jiajunhui.xapp.medialoader.bean.MediaItem;
 import com.jiajunhui.xapp.medialoader.bean.MediaResult;
 import com.jiajunhui.xapp.medialoader.callback.OnFileLoaderCallBack;
 import com.jiajunhui.xapp.medialoader.callback.OnMediaFileLoaderCallBack;
+import com.jiajunhui.xapp.medialoader.callback.OnMediaFolderLoaderCallBack;
 import com.jiajunhui.xapp.medialoader.filter.PhotoFilter;
 import com.jiajunhui.xapp.medialoader.inter.OnRecursionListener;
 import com.jiajunhui.xapp.medialoader.utils.TraversalSearchLoader;
@@ -149,8 +150,18 @@ public class MainActivity extends AppCompatActivity {
                 mInfos.append("consume time : " + (System.currentTimeMillis() - start)).append("ms").append("\n");
                 tv_file_info.setText(mInfos.toString());
             }
-        }).setPageIndex(0).setPageSize(30).setVideoMaxSecond(10000)
+        }).setPageIndex(0).setPageSize(1).setVideoMaxSecond(10000)
                 .setMediaType(MediaType.ALL).load();
+
+        MediaLoader.with(this).setOnMediaFolderLoaderCallBack(new OnMediaFolderLoaderCallBack() {
+
+            @Override
+            public void onResult(@NonNull List<MediaFolder> result) {
+                for (MediaFolder folder : result) {
+                    Log.e("MediaFolder", folder + "");
+                }
+            }
+        }).setMediaType(MediaType.ALL).loadFolders();
     }
 
     @PermissionFail(requestCode = 100)

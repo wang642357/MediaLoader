@@ -1,5 +1,7 @@
 package com.jiajunhui.xapp.medialoader.utils;
 
+import android.database.Cursor;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
@@ -19,6 +21,7 @@ public class MediaUtil {
     private static final String NOT_GIF_UNKNOWN = "!='image/*'";
     private static final String NOT_GIF = " AND (" + MediaStore.MediaColumns.MIME_TYPE + "!='image/gif' AND " + MediaStore.MediaColumns.MIME_TYPE + NOT_GIF_UNKNOWN + ")";
     private static final String COLUMN_BUCKET_ID = "bucket_id";
+    private static final Uri QUERY_URI = MediaStore.Files.getContentUri("external");
 
     public static String getPageSelection(MediaConfig config) {
         String durationCondition = getDurationCondition(config);
@@ -146,4 +149,20 @@ public class MediaUtil {
         }
     }
 
+    public static String getFirstUri(Cursor cursor) {
+        long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Files.FileColumns._ID));
+        return getRealPathAndroid_Q(id);
+    }
+
+    public static String getRealPathAndroid_Q(long id) {
+        return QUERY_URI.buildUpon().appendPath(String.valueOf(id)).build().toString();
+    }
+
+    public static String getFirstUrl(Cursor cursor) {
+        return cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
+    }
+
+    public static String getFirstCoverMimeType(Cursor cursor) {
+        return cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.MIME_TYPE));
+    }
 }

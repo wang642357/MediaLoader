@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.jiajunhui.xapp.medialoader.callback.OnMediaFileLoaderCallBack;
+import com.jiajunhui.xapp.medialoader.callback.OnMediaFolderLoaderCallBack;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,6 +24,7 @@ public class MediaConfig {
     private FragmentActivity mActivity;
     public HashSet<String> mQueryMimeTypeHashSet;
     private OnMediaFileLoaderCallBack mOnMediaFileLoaderCallBack;
+    private OnMediaFolderLoaderCallBack mOnMediaFolderLoaderCallBack;
     private int mPageIndex;
     private int mPageSize;
     private long folderId = -1;
@@ -66,6 +68,11 @@ public class MediaConfig {
 
     public MediaConfig setOnMediaFileLoaderCallBack(@NonNull OnMediaFileLoaderCallBack onMediaFileLoaderCallBack) {
         mOnMediaFileLoaderCallBack = onMediaFileLoaderCallBack;
+        return this;
+    }
+
+    public MediaConfig setOnMediaFolderLoaderCallBack(@NonNull OnMediaFolderLoaderCallBack onMediaFolderLoaderCallBack) {
+        mOnMediaFolderLoaderCallBack = onMediaFolderLoaderCallBack;
         return this;
     }
 
@@ -142,6 +149,17 @@ public class MediaConfig {
                 MediaStoreLoader.getLoader().loadMediaFile(mActivity, mOnMediaFileLoaderCallBack);
             } else if (mFragment != null) {
                 MediaStoreLoader.getLoader().loadMediaFile(mFragment, mOnMediaFileLoaderCallBack);
+            }
+        }
+    }
+
+    public void loadFolders() {
+        if (mOnMediaFolderLoaderCallBack != null) {
+            mOnMediaFolderLoaderCallBack.setMediaConfig(this);
+            if (mActivity != null) {
+                MediaStoreLoader.getLoader().loadFolders(mActivity, mOnMediaFolderLoaderCallBack);
+            } else if (mFragment != null) {
+                MediaStoreLoader.getLoader().loadFolders(mFragment, mOnMediaFolderLoaderCallBack);
             }
         }
     }
