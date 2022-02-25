@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
 group = 'com.github.wang642357'
-version = '1.4.0'
+version = '1.5.0'
 
 android {
     compileSdkVersion 30
@@ -10,8 +10,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 4
-        versionName "1.4.0"
+        versionCode 5
+        versionName "1.5.0"
     }
     buildTypes {
         release {
@@ -40,7 +40,7 @@ afterEvaluate {
                 // You can then customize attributes of the publication as shown below.
                 groupId = 'com.github.wang642357'
                 artifactId = 'medialoader'
-                version = '1.4.0'
+                version = '1.5.0'
             }
         }
     }
