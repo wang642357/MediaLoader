@@ -1,5 +1,12 @@
 package com.jiajunhui.xapp.medialoader.callback;
 
+import static android.provider.BaseColumns._ID;
+import static android.provider.MediaStore.MediaColumns.DATA;
+import static android.provider.MediaStore.MediaColumns.DATE_MODIFIED;
+import static android.provider.MediaStore.MediaColumns.DISPLAY_NAME;
+import static android.provider.MediaStore.MediaColumns.MIME_TYPE;
+import static android.provider.MediaStore.MediaColumns.SIZE;
+
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -13,16 +20,6 @@ import com.jiajunhui.xapp.medialoader.utils.MediaUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.provider.BaseColumns._ID;
-import static android.provider.MediaStore.MediaColumns.BUCKET_DISPLAY_NAME;
-import static android.provider.MediaStore.MediaColumns.BUCKET_ID;
-import static android.provider.MediaStore.MediaColumns.DATA;
-import static android.provider.MediaStore.MediaColumns.DATE_MODIFIED;
-import static android.provider.MediaStore.MediaColumns.DISPLAY_NAME;
-import static android.provider.MediaStore.MediaColumns.DURATION;
-import static android.provider.MediaStore.MediaColumns.MIME_TYPE;
-import static android.provider.MediaStore.MediaColumns.SIZE;
 
 
 /**
@@ -39,11 +36,11 @@ public abstract class OnMediaFileLoaderCallBack extends BaseLoaderCallBack<Media
                 MediaStore.MediaColumns.MIME_TYPE,
                 MediaStore.MediaColumns.WIDTH,
                 MediaStore.MediaColumns.HEIGHT,
-                MediaStore.MediaColumns.DURATION,
+                COLUMN_DURATION,
                 MediaStore.MediaColumns.SIZE,
-                MediaStore.MediaColumns.BUCKET_DISPLAY_NAME,
+                COLUMN_BUCKET_DISPLAY_NAME,
                 MediaStore.MediaColumns.DISPLAY_NAME,
-                MediaStore.MediaColumns.BUCKET_ID,
+                COLUMN_BUCKET_ID,
                 MediaStore.MediaColumns.DATE_ADDED,
                 MediaStore.MediaColumns.DATE_MODIFIED,
         };
@@ -92,14 +89,14 @@ public abstract class OnMediaFileLoaderCallBack extends BaseLoaderCallBack<Media
         MediaItem item;
         long sum_size = 0;
         while (data.moveToNext()) {
-            long folderId = data.getLong(data.getColumnIndexOrThrow(BUCKET_ID));
-            String folderName = data.getString(data.getColumnIndexOrThrow(BUCKET_DISPLAY_NAME));
+            long folderId = data.getLong(data.getColumnIndexOrThrow(COLUMN_BUCKET_ID));
+            String folderName = data.getString(data.getColumnIndexOrThrow(COLUMN_BUCKET_DISPLAY_NAME));
             int imageId = data.getInt(data.getColumnIndexOrThrow(_ID));
             String name = data.getString(data.getColumnIndexOrThrow(DISPLAY_NAME));
             long size = data.getLong(data.getColumnIndexOrThrow(SIZE));
             String path = data.getString(data.getColumnIndexOrThrow(DATA));
             long modified = data.getLong(data.getColumnIndexOrThrow(DATE_MODIFIED));
-            long duration = data.getLong(data.getColumnIndexOrThrow(DURATION));
+            long duration = data.getLong(data.getColumnIndexOrThrow(COLUMN_DURATION));
             String mineType = data.getString(data.getColumnIndexOrThrow(MIME_TYPE));
             folder = new MediaFolder();
             folder.setFolderId(folderId);

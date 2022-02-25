@@ -27,16 +27,16 @@ public abstract class OnMediaFolderLoaderCallBack extends BaseLoaderCallBack<Lis
     private static final String[] PROJECTION_29 = {
             MediaStore.Files.FileColumns._ID,
             MediaStore.MediaColumns.DATA,
-            MediaStore.MediaColumns.BUCKET_ID,
-            MediaStore.MediaColumns.BUCKET_DISPLAY_NAME,
+            COLUMN_BUCKET_ID,
+            COLUMN_BUCKET_DISPLAY_NAME,
             MediaStore.MediaColumns.DISPLAY_NAME,
             MediaStore.MediaColumns.MIME_TYPE};
 
     private static final String[] PROJECTION = {
             MediaStore.Files.FileColumns._ID,
             MediaStore.MediaColumns.DATA,
-            MediaStore.MediaColumns.BUCKET_ID,
-            MediaStore.MediaColumns.BUCKET_DISPLAY_NAME,
+            COLUMN_BUCKET_ID,
+            COLUMN_BUCKET_DISPLAY_NAME,
             MediaStore.MediaColumns.DISPLAY_NAME,
             MediaStore.MediaColumns.MIME_TYPE,
             "COUNT(*) AS " + COLUMN_COUNT};

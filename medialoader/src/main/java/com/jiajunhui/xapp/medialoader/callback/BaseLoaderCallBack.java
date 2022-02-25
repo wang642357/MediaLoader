@@ -12,6 +12,10 @@ import com.jiajunhui.xapp.medialoader.MediaConfig;
 
 public abstract class BaseLoaderCallBack<T> extends OnLoaderCallBack {
 
+    public static final String COLUMN_BUCKET_ID = "bucket_id";
+    public static final String COLUMN_DURATION = "duration";
+    public static final String COLUMN_BUCKET_DISPLAY_NAME = "bucket_display_name";
+
     protected MediaConfig mMediaConfig;
 
     public void setMediaConfig(MediaConfig mediaConfig) {

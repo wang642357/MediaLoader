@@ -1,5 +1,7 @@
 package com.jiajunhui.xapp.medialoader.bean;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,8 +93,7 @@ public class MediaFolder implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MediaFolder that = (MediaFolder) o;
-        return id == that.id &&
-                folderName.equals(that.folderName);
+        return id == that.id && TextUtils.equals(folderName, that.folderName);
     }
 
     @Override
