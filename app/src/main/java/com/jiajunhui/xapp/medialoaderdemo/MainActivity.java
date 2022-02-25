@@ -38,6 +38,7 @@ import kr.co.namee.permissiongen.PermissionSuccess;
 
 public class MainActivity extends AppCompatActivity {
 
+    private TextView tv_folder_info;
     private TextView tv_photo_info;
     private TextView tv_video_info;
     private TextView tv_audio_info;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        tv_folder_info = (TextView) findViewById(R.id.tv_folder_info);
         tv_photo_info = (TextView) findViewById(R.id.tv_photo_info);
         tv_video_info = (TextView) findViewById(R.id.tv_video_info);
         tv_audio_info = (TextView) findViewById(R.id.tv_audio_info);
@@ -114,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startLoad() {
+        loadFolder();
         loadPhotos();
         loadAudios();
         loadVideos();
@@ -152,21 +155,24 @@ public class MainActivity extends AppCompatActivity {
             }
         }).setPageIndex(0).setPageSize(1).setVideoMaxSecond(10000)
                 .setMediaType(MediaType.ALL).load();
+    }
 
+    @PermissionFail(requestCode = 100)
+    public void onPermissionFail() {
+        Toast.makeText(this, "permission deny", Toast.LENGTH_SHORT).show();
+    }
+
+    private void loadFolder() {
         MediaLoader.with(this).setOnMediaFolderLoaderCallBack(new OnMediaFolderLoaderCallBack() {
 
             @Override
             public void onResult(@NonNull List<MediaFolder> result) {
-                for (MediaFolder folder : result) {
-                    Log.e("MediaFolder", folder + "");
+                for (MediaFolder mediaFolder : result) {
+                    Log.e("onResult", mediaFolder.toString());
                 }
+                tv_folder_info.setText("目录: " + result.size() + " 个");
             }
-        }).setMediaType(MediaType.ALL).loadFolders();
-    }
-
-    @PermissionFail(requestCode = 100)
-    public void onPermissionFail(){
-        Toast.makeText(this, "permission deny", Toast.LENGTH_SHORT).show();
+        }).loadFolders();
     }
 
     private void loadPhotos() {
